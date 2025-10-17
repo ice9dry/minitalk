@@ -19,7 +19,7 @@ SERVER_SRC = server.c
 CLIENT_SRC = client.c
 
 # Header files
-HEADER_NAMES = main.h
+HEADER_NAMES = server.h client.h
 HEADERS = $(patsubst %,$(INC_DIR)/%,$(HEADER_NAMES)) \
 	$(FT_PRINTF_DIR)/ft_printf.h $(FT_PRINTF_DIR)/libft/libft.h
 
