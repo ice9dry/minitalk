@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   client.c                                           :+:      :+:    :+:   */
+/*   client_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marlee <marlee@student.42student.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:43:21 by marlee            #+#    #+#             */
-/*   Updated: 2025/10/18 11:36:32 by marlee           ###   ########.fr       */
+/*   Updated: 2025/10/18 16:57:32 by marlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#include "../include/client_bonus.h"
 
 void	send_char(int server_pid, char c)
 {
@@ -46,10 +46,9 @@ void	send_string(int server_pid, char *str)
 int	main(int argc, char **argv)
 {
 	int		server_pid;
-	if (argc != 3 || ft_strlen(argv[2]) > 256)
+	if (argc != 3)
 	{
-		ft_printf("Usage: ./client [PID] [message]\n");
-		ft_printf("* Message shall not be more than 256 chars\n");
+		ft_printf("Usage: ./client_bit [PID] [message]\n");
 		return (1);
 	}
 	server_pid = ft_atoi(argv[1]);
