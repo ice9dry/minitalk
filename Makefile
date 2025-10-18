@@ -99,3 +99,4 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re makeprintf norm debug bonus
+# Make make bonus like make all
