@@ -6,11 +6,13 @@
 /*   By: marlee <marlee@student.42student.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:43:21 by marlee            #+#    #+#             */
-/*   Updated: 2025/10/18 11:57:17 by marlee           ###   ########.fr       */
+/*   Updated: 2025/10/18 19:02:11 by marlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
+
+volatile sig_atomic_t	g_client_pid = 0;
 
 void	sig_handler(int sig)
 {
@@ -50,6 +52,8 @@ void	sig_handler(int sig)
 		bit_index = 0;
 		current_byte = 0;
 	}
+	if (g_client_pid != 0)
+		kill(g_client_pid, SIGUSR1);
 	// ft_printf("Signal received!\n");
 }
 

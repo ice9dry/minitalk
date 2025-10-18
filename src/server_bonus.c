@@ -6,135 +6,80 @@
 /*   By: marlee <marlee@student.42student.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:43:21 by marlee            #+#    #+#             */
-/*   Updated: 2025/10/18 16:55:47 by marlee           ###   ########.fr       */
+/*   Updated: 2025/10/18 21:32:08 by marlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/server_bonus.h"
 
-volatile sig_atomic_t g_received_bit = -1;
-volatile sig_atomic_t g_bit_ready = 0;
+#include "server.h"
 
-void sig_handler(int sig)
+typedef struct s_client
 {
-    // This handler does MINIMAL work - just record which signal arrived
-    if (sig == SIGUSR1)
-        g_received_bit = 0;
-    else if (sig == SIGUSR2)
-        g_received_bit = 1;
+	pid_t	pid;
+	int		bit_index;
+	char	current_byte;
+	char	message[1024];
+	int		char_index;
+}	t_client;
 
-    g_bit_ready = 1;
-}
-void process_bits(void)
+t_client g_client = {0, 0, 0, {0}, 0};
+
+void	handle_bit(int sig, siginfo_t *info, void *context)
 {
-    static char message[1024];
-    static int bit_index = 0;
-    static int char_index = 0;
-    static char current_byte = 0;
+	(void)context;
 
-    while (1)
-    {
-        // Wait for a bit to be ready
-        if (!g_bit_ready)
-            continue;
-
-        // Process the bit
-        if (g_received_bit == 1)
-            current_byte |= (1 << bit_index);
-        // If bit is 0, we don't need to do anything (bit is already 0)
-
-        bit_index++;
-        g_bit_ready = 0;
-        g_received_bit = -1;
-
-        // Check if we have a complete byte
-        if (bit_index == 8)
-        {
-            if (current_byte == '\0')
-            {
-                if (char_index > 0)
-                {
-                    message[char_index] = '\0';
-                    write(1, message, char_index);
-                    write(1, "\n", 1);
-                }
-                char_index = 0;
-            }
-            else
-            {
-                if (char_index < 1023)
-                {
-                    message[char_index] = current_byte;
-                    char_index++;
-                }
-            }
-            bit_index = 0;
-            current_byte = 0;
-        }
-        break; // Process one bit per loop iteration
-    }
-}
-void	sig_handler_old(int sig)
-{
-	static char		message[1024];
-	static int		bit_index = 0;
-	static int		char_index = 0;
-	static char		current_byte = 0;
-
-	// if (sig == SIGUSR1)
-	// 	current_byte |= (0 << bit_index);
-	// else
-	if (sig == SIGUSR2)
-		current_byte |= (1 << bit_index);
-	bit_index++;
-	if (bit_index == 8)
+	// Initialize client PID if new client
+	if (g_client.pid != info->si_pid)
 	{
-		// printf("Received byte: %c (ASCII: %d)\n", current_byte, current_byte);
-		if (current_byte == '\0')
+		g_client.pid = info->si_pid;
+		g_client.bit_index = 0;
+		g_client.char_index = 0;
+		g_client.current_byte = 0;
+	}
+
+	// Set the bit
+	if (sig == SIGUSR2)
+		g_client.current_byte |= (1 << g_client.bit_index);
+	g_client.bit_index++;
+
+	// If byte complete
+	if (g_client.bit_index == 8)
+	{
+		if (g_client.current_byte == '\0')
 		{
-			if (char_index > 0)
-			{
-				message[char_index] = '\0';
-				write(1, message, char_index);
-				write(1, "\n", 1);
-			}
-			char_index = 0;
+			// End of message, print and reset
+			write(1, g_client.message, g_client.char_index);
+			write(1, "\n", 1);
+			g_client.char_index = 0;
 		}
 		else
 		{
-			if (char_index < 1023)
-			{
-				message[char_index] = current_byte;
-				char_index++;
-			}
+			if (g_client.char_index < 1023)
+				g_client.message[g_client.char_index++] = g_client.current_byte;
 		}
-		bit_index = 0;
-		current_byte = 0;
+		g_client.current_byte = 0;
+		g_client.bit_index = 0;
 	}
-	// ft_printf("Signal received!\n");
+
+	// Send ACK to client
+	kill(g_client.pid, SIGUSR1);
 }
 
-int	main()
+int	main(void)
 {
-	struct		sigaction sa;
-	// sigset_t	block_mask;
+	struct sigaction sa;
 
+	ft_printf("Bonus Server PID: %d\n", getpid());
+
+	sa.sa_sigaction = handle_bit;
 	sigemptyset(&sa.sa_mask);
-	sigaddset(&sa.sa_mask, SIGUSR1);
-	sigaddset(&sa.sa_mask, SIGUSR2);
+	sa.sa_flags = SA_SIGINFO;
 
-	// sa.sa_mask = block_mask;
-	sa.sa_handler = sig_handler;
-	sa.sa_flags = 0;
 	sigaction(SIGUSR1, &sa, NULL);
 	sigaction(SIGUSR2, &sa, NULL);
-	ft_printf("Server PID: %d\n", getpid());
-	// signal(SIGUSR1, sig_handler);
-	// signal(SIGUSR2, sig_handler);
+
 	while (1)
-	{
 		pause();
-		process_bits();
-	}
 	return (0);
 }
