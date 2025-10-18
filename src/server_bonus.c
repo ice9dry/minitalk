@@ -6,13 +6,11 @@
 /*   By: marlee <marlee@student.42student.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:43:21 by marlee            #+#    #+#             */
-/*   Updated: 2025/10/18 21:32:08 by marlee           ###   ########.fr       */
+/*   Updated: 2025/10/18 23:18:48 by marlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/server_bonus.h"
-
-#include "server.h"
 
 typedef struct s_client
 {

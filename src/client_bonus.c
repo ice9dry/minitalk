@@ -6,7 +6,7 @@
 /*   By: marlee <marlee@student.42student.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:43:21 by marlee            #+#    #+#             */
-/*   Updated: 2025/10/18 21:50:45 by marlee           ###   ########.fr       */
+/*   Updated: 2025/10/18 23:20:18 by marlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	send_char(int server_pid, char c)
 		bit++;
 		while (!g_ack_received)
 			pause();
+		usleep(5);
 	}
 }
 
@@ -47,27 +48,44 @@ void	send_string(int server_pid, char *str)
 	send_char(server_pid, '\0');
 }
 
+int	is_valid_pid(const char *s)
+{
+	int i = 0;
+
+	if (!s || !*s)
+		return (0);
+	while (s[i])
+	{
+		if (s[i] < '0' || s[i] > '9')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 int	main(int argc, char **argv)
 {
 	int	server_pid;
 
-	if (argc != 3 || ft_strlen(argv[2]) > 256)
+	if (argc != 3 || ft_strlen(argv[2]) > 1024)
 	{
 		ft_printf("Usage: ./client [PID] [message]\n");
+		ft_printf("* Message shall not be more than 1024 chars\n");
 		return (1);
 	}
-
+	if (!is_valid_pid(argv[1]))
+	{
+		ft_printf("Error: PID must contain only digits (0-9).\n");
+		return (1);
+	}
 	server_pid = ft_atoi(argv[1]);
 	if (server_pid <= 0)
 	{
 		ft_printf("Invalid PID.\n");
 		return (1);
 	}
-
 	signal(SIGUSR1, ack_handler); // per-bit ACK
-
 	send_string(server_pid, argv[2]);
 	ft_printf("Message sent successfully!\n");
-
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: marlee <marlee@student.42student.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:43:21 by marlee            #+#    #+#             */
-/*   Updated: 2025/10/18 21:16:50 by marlee           ###   ########.fr       */
+/*   Updated: 2025/10/18 23:11:33 by marlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,20 @@ void	send_string(int server_pid, char *str)
 	}
 	send_char(server_pid, '\0');
 }
+int	is_valid_pid(const char *s)
+{
+	int i = 0;
+
+	if (!s || !*s)
+		return (0);
+	while (s[i])
+	{
+		if (s[i] < '0' || s[i] > '9')
+			return (0);
+		i++;
+	}
+	return (1);
+}
 
 int	main(int argc, char **argv)
 {
@@ -62,6 +76,11 @@ int	main(int argc, char **argv)
 		ft_printf("* Message shall not be more than 256 chars\n");
 		return (1);
 	}
+	if (!is_valid_pid(argv[1]))
+	{
+		ft_printf("Error: PID must contain only digits (0–9).\n");
+		return (1);
+	}
 	server_pid = ft_atoi(argv[1]);
 	if (server_pid <= 0)
 	{
@@ -70,7 +89,5 @@ int	main(int argc, char **argv)
 	}
 	signal(SIGUSR1, ack_handler);
 	send_string(server_pid, argv[2]);
-	// send_char(server_pid, '\n');
-	// kill (server_pid, SIGUSR1);
 	return (0);
 }
