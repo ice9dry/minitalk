@@ -6,7 +6,7 @@
 /*   By: marlee <marlee@student.42student.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:43:21 by marlee            #+#    #+#             */
-/*   Updated: 2025/10/20 21:36:49 by marlee           ###   ########.fr       */
+/*   Updated: 2025/10/20 23:44:19 by marlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,3 +91,5 @@ int	main(int argc, char **argv)
 	send_string(server_pid, argv[2]);
 	return (0);
 }
+
+// check for improper PID input and timeout.

@@ -6,7 +6,7 @@
 /*   By: marlee <marlee@student.42student.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:43:21 by marlee            #+#    #+#             */
-/*   Updated: 2025/10/20 23:35:13 by marlee           ###   ########.fr       */
+/*   Updated: 2025/10/20 23:52:21 by marlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ void	send_char(int server_pid, char c)
 		bit++;
 		while (!g_ack_received)
 			pause();
-		usleep(5);
 	}
 }
 
@@ -94,3 +93,4 @@ int	main(int argc, char **argv)
 	ft_printf("Message sent successfully!\n");
 	return (0);
 }
+// add timeout
