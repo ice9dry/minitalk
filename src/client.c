@@ -6,7 +6,7 @@
 /*   By: marlee <marlee@student.42student.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:43:21 by marlee            #+#    #+#             */
-/*   Updated: 2025/10/18 23:11:33 by marlee           ###   ########.fr       */
+/*   Updated: 2025/10/20 21:36:49 by marlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	send_char(int server_pid, char c)
 			kill(server_pid, SIGUSR1);
 		else
 			kill(server_pid, SIGUSR2);
-		usleep(50);
+		usleep(500);
 		i++;
 	}
 }

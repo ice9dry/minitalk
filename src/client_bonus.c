@@ -6,7 +6,7 @@
 /*   By: marlee <marlee@student.42student.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:43:21 by marlee            #+#    #+#             */
-/*   Updated: 2025/10/18 23:20:18 by marlee           ###   ########.fr       */
+/*   Updated: 2025/10/20 23:35:13 by marlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,14 @@ void	send_char(int server_pid, char c)
 
 void	send_string(int server_pid, char *str)
 {
-	int	i = 0;
+	int	i;
+	
+	i = 0;
 	while (str[i])
-		send_char(server_pid, str[i++]);
+	{
+		send_char(server_pid, str[i]);
+		i++;
+	}
 	send_char(server_pid, '\0');
 }
 
@@ -84,7 +89,7 @@ int	main(int argc, char **argv)
 		ft_printf("Invalid PID.\n");
 		return (1);
 	}
-	signal(SIGUSR1, ack_handler); // per-bit ACK
+	signal(SIGUSR1, ack_handler);
 	send_string(server_pid, argv[2]);
 	ft_printf("Message sent successfully!\n");
 	return (0);
