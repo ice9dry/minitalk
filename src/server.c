@@ -6,7 +6,7 @@
 /*   By: marlee <marlee@student.42student.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:43:21 by marlee            #+#    #+#             */
-/*   Updated: 2025/10/21 15:23:51 by marlee           ###   ########.fr       */
+/*   Updated: 2025/10/21 15:25:00 by marlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	sig_handler(int sig)
 	// if (sig == SIGUSR1)
 	// 	current_byte |= (0 << bit_index);
 
-int	main()
+int	main(void)
 {
 	ft_printf("Server PID: %d\n", getpid());
 	signal(SIGUSR1, sig_handler);
