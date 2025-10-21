@@ -22,8 +22,6 @@ SERVER_BONUS_SRC = server_bonus.c
 CLIENT_BONUS_SRC = client_bonus.c
 
 # Header files
-#HEADER_NAMES = server.h client.h
-#HEADER_NAMES = #server_bonus.h client_bonus.h
 HEADERS = ./include/server.h ./include/client.h $(FT_PRINTF_DIR)/ft_printf.h $(FT_PRINTF_DIR)/libft/libft.h
 HEADERS_BONUS = ./include/server_bonus.h ./include/client_bonus.h $(FT_PRINTF_DIR)/ft_printf.h $(FT_PRINTF_DIR)/libft/libft.h
 
