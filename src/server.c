@@ -6,44 +6,29 @@
 /*   By: marlee <marlee@student.42student.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:43:21 by marlee            #+#    #+#             */
-/*   Updated: 2025/10/21 15:25:00 by marlee           ###   ########.fr       */
+/*   Updated: 2025/10/21 16:46:03 by marlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-volatile sig_atomic_t	g_client_pid = 0;
-
-void	send_ack(void)
-{
-	if (g_client_pid != 0)
-		kill(g_client_pid, SIGUSR1);
-}
-
 void	sig_handler(int sig)
 {
-	static char		message[1025];
 	static int		bit_index = 0;
-	static int		char_index = 0;
 	static char		current_byte = 0;
 
 	if (sig == SIGUSR2)
 		current_byte |= (1 << bit_index);
 	bit_index++;
-	if (bit_index != 8)
-		return (send_ack());
-	if (current_byte == '\0')
+	if (bit_index == 8)
 	{
-		message[char_index] = '\0';
-		write(1, message, char_index);
-		write(1, "\n", 1);
-		char_index = 0;
+		if (current_byte == '\0')
+			write(1, "\n", 1);
+		else
+			write(1, &current_byte, 1);
+		bit_index = 0;
+		current_byte = 0;
 	}
-	else if (char_index < 1024)
-		message[char_index++] = current_byte;
-	bit_index = 0;
-	current_byte = 0;
-	send_ack();
 }
 
 	// Removed below as it serves no purpose other than consistency

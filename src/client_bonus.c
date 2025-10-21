@@ -6,43 +6,42 @@
 /*   By: marlee <marlee@student.42student.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:43:21 by marlee            #+#    #+#             */
-/*   Updated: 2025/10/20 23:52:21 by marlee           ###   ########.fr       */
+/*   Updated: 2025/10/21 19:19:28 by marlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/client_bonus.h"
 
-volatile sig_atomic_t g_ack_received = 0;
+volatile sig_atomic_t	g_flag;
 
 void	ack_handler(int sig)
 {
-	(void)sig;
-	g_ack_received = 1;
+	if (sig == SIGUSR1)
+		g_flag = 1;
 }
 
 void	send_char(int server_pid, char c)
 {
-	int	bit = 0;
+	int	bit;
 
+	bit = 0;
 	while (bit < 8)
 	{
-		g_ack_received = 0;
-
+		g_flag = 0;
 		if ((c >> bit) & 1)
 			kill(server_pid, SIGUSR2);
 		else
 			kill(server_pid, SIGUSR1);
-
-		bit++;
-		while (!g_ack_received)
+		while (g_flag != 1)
 			pause();
+		bit++;
 	}
 }
 
 void	send_string(int server_pid, char *str)
 {
 	int	i;
-	
+
 	i = 0;
 	while (str[i])
 	{
@@ -54,8 +53,9 @@ void	send_string(int server_pid, char *str)
 
 int	is_valid_pid(const char *s)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	if (!s || !*s)
 		return (0);
 	while (s[i])
@@ -71,10 +71,9 @@ int	main(int argc, char **argv)
 {
 	int	server_pid;
 
-	if (argc != 3 || ft_strlen(argv[2]) > 1024)
+	if (argc != 3)
 	{
 		ft_printf("Usage: ./client [PID] [message]\n");
-		ft_printf("* Message shall not be more than 1024 chars\n");
 		return (1);
 	}
 	if (!is_valid_pid(argv[1]))
@@ -83,9 +82,9 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	server_pid = ft_atoi(argv[1]);
-	if (server_pid <= 0)
+	if (server_pid <= 0 || kill(server_pid, 0) == -1)
 	{
-		ft_printf("Invalid PID.\n");
+		ft_printf("Error: Invalid PID.\n");
 		return (1);
 	}
 	signal(SIGUSR1, ack_handler);
@@ -93,4 +92,3 @@ int	main(int argc, char **argv)
 	ft_printf("Message sent successfully!\n");
 	return (0);
 }
-// add timeout

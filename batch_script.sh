@@ -38,7 +38,7 @@ test_string() {
     else
         echo -e "${RED}✗ Failed to send${NC}"
     fi
-    echo ""
+	echo ""
 }
 
 # Test different string lengths
@@ -55,7 +55,7 @@ test_string "8 characters" "12345678"
 test_string "16 characters" "16-char-string!!!!"
 test_string "32 characters" "This-is-exactly-thirty-two-chars!!"
 test_string "64 characters" "This string is exactly sixty-four characters long which is 2^6!!"
-test_string "128 characters" "This string is exactly one hundred twenty-eight characters long, which is 2^7 and should be a good test for the minitalk project implementation!"
+test_string "128 characters" "This string is exactly one hundred twenty-eight characters long, which is 2^7 and should be a good test for the minitalk     128"
 
 # Very long strings
 test_string "256 characters" "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus imperdiet, nulla et dictum interdum, nisi lorem egestas odio, vitae scelerisque enim ligula venenatis dolor. Maecenas nisl est, ultrices nec congue eget, auctor vitae massa. Fusce luctu 256"
@@ -67,5 +67,21 @@ test_string "1024 characters" "This is a 1024 character string. Lorem ipsum dolo
 test_string "Newlines" $'Line1\nLine2\nLine3'
 test_string "Tabs and spaces" "Hello\tWorld  Test"
 test_string "Mixed special chars" "Test\x00Null\tTab\nNewline"
+
+test_string "Basic Latin" "Hello World"
+test_string "Latin Extended" "Café naïve fiancé"
+test_string "Currency Symbols" "€ £ ¥ $"
+test_string "Mathematical Symbols" "∑ ∫ π ± ∞"
+test_string "Arrows" "→ ← ↑ ↓ ↔"
+test_string "Emojis" "😀 🚀 🌟 🎉"
+test_string "Chinese" "你好世界"
+test_string "Japanese" "こんにちは世界"
+test_string "Korean" "안녕하세요"
+test_string "Arabic" "مرحبا بالعالم"
+test_string "Hebrew" "שלום עולם"
+test_string "Russian" "Привет мир"
+test_string "Greek" "Γειά σου Κόσμε"
+test_string "Hindi" "नमस्ते दुनिया"
+test_string "Mixed Unicode" "Hello 世界 😊 Café 123 →"
 
 echo -e "${GREEN}All tests completed!${NC}"

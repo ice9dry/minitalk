@@ -6,19 +6,11 @@
 /*   By: marlee <marlee@student.42student.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:43:21 by marlee            #+#    #+#             */
-/*   Updated: 2025/10/21 15:21:45 by marlee           ###   ########.fr       */
+/*   Updated: 2025/10/21 19:21:43 by marlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "client.h"
-
-volatile sig_atomic_t g_ack_received = 0;
-
-void	ack_handler(int sig)
-{
-	(void)sig;
-	g_ack_received = 1;
-}
 
 void	send_char(int server_pid, char c)
 {
@@ -28,7 +20,6 @@ void	send_char(int server_pid, char c)
 	i = 0;
 	while (i < 8)
 	{
-		g_ack_received = 0;
 		bit = (c >> i) & 1;
 		if (bit == 0)
 			kill(server_pid, SIGUSR1);
@@ -51,10 +42,12 @@ void	send_string(int server_pid, char *str)
 	}
 	send_char(server_pid, '\0');
 }
+
 int	is_valid_pid(const char *s)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	if (!s || !*s)
 		return (0);
 	while (s[i])
@@ -70,10 +63,9 @@ int	main(int argc, char **argv)
 {
 	int		server_pid;
 
-	if (argc != 3 || ft_strlen(argv[2]) > 1024)
+	if (argc != 3)
 	{
 		ft_printf("Usage: ./client [PID] [message]\n");
-		ft_printf("* Message shall not be more than 1024 chars\n");
 		return (1);
 	}
 	if (!is_valid_pid(argv[1]))
@@ -82,14 +74,11 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	server_pid = ft_atoi(argv[1]);
-	if (server_pid <= 0)
+	if (server_pid <= 0 || kill(server_pid, 0) == -1)
 	{
-		ft_printf("Invalid PID.\n");
+		ft_printf("Error: Invalid PID.\n");
 		return (1);
 	}
-	signal(SIGUSR1, ack_handler);
 	send_string(server_pid, argv[2]);
 	return (0);
 }
-
-// check for improper PID input and timeout.

@@ -47,8 +47,8 @@ $(CLIENT_NAME): $(CLIENT_OBJ) $(FT_PRINTF_DIR)/libftprintf.a
 bonus: .bonus
 
 .bonus: ./src/server_bonus.c ./src/client_bonus.c $(HEADERS_BONUS)
-	@$(MAKE) makeprintf 
-	@$(MAKE) $(SERVER_NAME)_bonus 
+	@$(MAKE) makeprintf
+	@$(MAKE) $(SERVER_NAME)_bonus
 	@$(MAKE) $(CLIENT_NAME)_bonus
 	@touch .bonus
 
