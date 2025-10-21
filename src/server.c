@@ -6,7 +6,7 @@
 /*   By: marlee <marlee@student.42student.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:43:21 by marlee            #+#    #+#             */
-/*   Updated: 2025/10/20 22:51:10 by marlee           ###   ########.fr       */
+/*   Updated: 2025/10/21 15:23:51 by marlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	send_ack(void)
 
 void	sig_handler(int sig)
 {
-	static char		message[1024];
+	static char		message[1025];
 	static int		bit_index = 0;
 	static int		char_index = 0;
 	static char		current_byte = 0;
@@ -39,7 +39,7 @@ void	sig_handler(int sig)
 		write(1, "\n", 1);
 		char_index = 0;
 	}
-	else if (char_index < 1023)
+	else if (char_index < 1024)
 		message[char_index++] = current_byte;
 	bit_index = 0;
 	current_byte = 0;

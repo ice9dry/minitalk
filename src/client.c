@@ -6,7 +6,7 @@
 /*   By: marlee <marlee@student.42student.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:43:21 by marlee            #+#    #+#             */
-/*   Updated: 2025/10/20 23:44:19 by marlee           ###   ########.fr       */
+/*   Updated: 2025/10/21 15:21:45 by marlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,11 @@ int	is_valid_pid(const char *s)
 int	main(int argc, char **argv)
 {
 	int		server_pid;
-	
-	if (argc != 3 || ft_strlen(argv[2]) > 256)
+
+	if (argc != 3 || ft_strlen(argv[2]) > 1024)
 	{
 		ft_printf("Usage: ./client [PID] [message]\n");
-		ft_printf("* Message shall not be more than 256 chars\n");
+		ft_printf("* Message shall not be more than 1024 chars\n");
 		return (1);
 	}
 	if (!is_valid_pid(argv[1]))
